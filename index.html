@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Explorer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Travel Explorer</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Your AI-powered guide to the perfect trip.</p>
+        </header>
+
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg mb-8 max-w-5xl mx-auto">
+            <form id="search-form" class="flex items-center space-x-2">
+                <div class="relative flex-grow">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" id="destination-input" placeholder="Enter a city or destination..." class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300">
+                    <span class="hidden md:inline">Search</span>
+                    <i class="fas fa-paper-plane md:hidden"></i>
+                </button>
+            </form>
+        </div>
+
+        <main id="results-container">
+            <div id="initial-message" class="text-center py-16">
+                <i class="fas fa-map-marked-alt text-5xl text-gray-400 dark:text-gray-500 mb-4"></i>
+                <p class="text-xl text-gray-500">Find your next adventure. Start by searching.</p>
+            </div>
+            
+            <div id="loader" class="text-center py-16 hidden">
+                 <div role="status">
+                    <svg aria-hidden="true" class="inline w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg><span class="sr-only">Loading...</span></div>
+                <p class="mt-4 text-lg text-gray-500">Fetching destination details...</p>
+            </div>
+
+            <div id="error-message" class="text-center py-16 hidden">
+                 <i class="fas fa-exclamation-triangle text-5xl text-red-500 mb-4"></i>
+                <p class="text-xl text-red-500"></p>
+            </div>
+
+            <!-- New 2-column layout grid -->
+            <div id="main-content-grid" class="hidden opacity-0 grid grid-cols-1 lg:grid-cols-5 gap-8">
+                
+                <!-- Left Column: Info & Itinerary -->
+                <div class="lg:col-span-3">
+                    <div class="flex justify-between items-center mb-6 flex-wrap">
+                        <h2 id="destination-name" class="text-3xl font-bold"></h2>
+                        <button id="map-button" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-semibold py-2 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-map-location-dot mr-2"></i>View on Map
+                        </button>
+                    </div>
+                    <div id="weather-info" class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg mb-8"></div>
+                    
+                    <!-- AI Itinerary Planner Section -->
+                    <section id="itinerary-section" class="mt-12">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <h3 class="text-2xl font-bold text-center mb-6">Plan Your Trip</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                                <div class="col-span-1">
+                                    <label for="trip-days" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Number of Days</label>
+                                    <input type="number" id="trip-days" min="1" max="14" value="3" class="w-full p-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <p class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Interests</p>
+                                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                                        <label class="flex items-center space-x-2"><input type="checkbox" value="Food" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 interest-checkbox"><span>Food</span></label>
+                                        <label class="flex items-center space-x-2"><input type="checkbox" value="History" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 interest-checkbox"><span>History</span></label>
+                                        <label class="flex items-center space-x-2"><input type="checkbox" value="Adventure" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 interest-checkbox"><span>Adventure</span></label>
+                                        <label class="flex items-center space-x-2"><input type="checkbox" value="Art & Culture" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 interest-checkbox"><span>Art & Culture</span></label>
+                                        <label class="flex items-center space-x-2"><input type="checkbox" value="Relaxation" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 interest-checkbox"><span>Relaxation</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <button id="generate-itinerary-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                                    <i class="fas fa-magic-wand-sparkles mr-2"></i>Generate Itinerary
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Itinerary Results -->
+                        <div id="itinerary-loader" class="text-center py-12 hidden">
+                             <div role="status">
+                                <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-green-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg><span class="sr-only">Loading...</span></div>
+                            <p class="mt-4 text-lg text-gray-500">Your personal itinerary is being created...</p>
+                        </div>
+                        <div id="itinerary-error" class="text-center py-12 hidden">
+                            <p class="text-red-500"></p>
+                        </div>
+                        <div id="itinerary-result" class="mt-8 hidden"></div>
+                    </section>
+                </div>
+
+                <!-- Right Column: Photo Gallery -->
+                <div class="lg:col-span-2">
+                    <div id="image-gallery-container" class="sticky top-8">
+                        <h3 class="text-2xl font-semibold mb-4">Photo Gallery</h3>
+                        <div id="image-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- The 'type="module"' is important for using import/export -->
+    <script src="script.js" type="module"></script>
+</body>
+</html>
+
